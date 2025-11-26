@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-# Polynomial Library
-
-A pure Python library for polynomial operations, supporting:
-
-- Addition, subtraction, multiplication, division
-- GCD via Euclidean algorithm
-- Sturm sequence & real root finding
-- Bezout's identity
-=======
 # Polynomial Lib
 
 Industrial-grade polynomial library with a C++ core (including FFT multiplication) and a Python API. Supports addition, subtraction, multiplication, division, derivative, evaluation, GCD, Sturm sequence for real root counting, real root finding, and Bezout identity.
@@ -42,9 +32,5 @@ print(q, r)
 set_fft_threshold(128)
 ```
 
-## Design
-- C++ implements performance-critical paths (naive/FFT multiplication, division, GCD, Sturm sequence, root finding)
-- Python loads `build/libpoly.*` via `ctypes` and falls back to pure Python implementations if the library is not built
 
 
->>>>>>> ab47c69 (Implemented in C)
