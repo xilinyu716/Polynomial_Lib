@@ -1,4 +1,20 @@
 __pycache__/
 *.pyc
 .vscode/
+<<<<<<< HEAD
 .env/
+=======
+.env/
+build/
+dist/
+*.so
+*.dylib
+*.dll
+*.o
+*.a
+*.log
+*.egg-info/
+.pytest_cache/
+.DS_Store
+src/lib/
+>>>>>>> ab47c69 (Implemented in C)
