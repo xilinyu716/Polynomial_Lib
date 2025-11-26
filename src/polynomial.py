@@ -9,13 +9,6 @@ This library provides operations on polynomials including:
 """
 
 import math
-<<<<<<< HEAD
-import numpy as np
-from typing import List, Tuple, Union
-
-class Polynomial:
-    def __init__(self, coefficients: List[float]):
-=======
 import os
 import sys
 import ctypes
@@ -82,7 +75,6 @@ def _to_py_list(c_arr, length: int) -> List[float]:
 class Polynomial:
     __slots__ = ("coeffs",)
     def __init__(self, coefficients: Sequence[float]):
->>>>>>> ab47c69 (Implemented in C)
         """Initialize a polynomial with given coefficients.
         
         Args:
@@ -92,11 +84,7 @@ class Polynomial:
         # Remove leading zeros
         while len(coefficients) > 1 and math.isclose(coefficients[0], 0, abs_tol=1e-10):
             coefficients = coefficients[1:]
-<<<<<<< HEAD
-        self.coeffs = coefficients
-=======
         self.coeffs = list(coefficients)
->>>>>>> ab47c69 (Implemented in C)
     
     def __repr__(self) -> str:
         terms = []
@@ -141,25 +129,15 @@ class Polynomial:
         return len(self.coeffs) - 1
     
     def evaluate(self, x: float) -> float:
-<<<<<<< HEAD
-        """Evaluate the polynomial at point x using Horner's method."""
-=======
         if _USE_CPP:
             arr = _to_c_array(self.coeffs)
             return float(_LIB.poly_eval(arr, len(self.coeffs), float(x)))
->>>>>>> ab47c69 (Implemented in C)
         result = 0.0
         for coeff in self.coeffs:
             result = result * x + coeff
         return result
     
     def derivative(self) -> 'Polynomial':
-<<<<<<< HEAD
-        """Return the derivative of the polynomial."""
-        if len(self.coeffs) == 1:
-            return Polynomial([0])
-        
-=======
         if len(self.coeffs) == 1:
             return Polynomial([0])
         if _USE_CPP:
@@ -168,56 +146,12 @@ class Polynomial:
             arr = _to_c_array(self.coeffs)
             _LIB.poly_derivative(arr, len(self.coeffs), out)
             return Polynomial(_to_py_list(out, out_len))
->>>>>>> ab47c69 (Implemented in C)
         new_coeffs = []
         for i, coeff in enumerate(self.coeffs[:-1]):
             new_coeffs.append(coeff * (len(self.coeffs) - 1 - i))
         return Polynomial(new_coeffs)
     
     def __add__(self, other: 'Polynomial') -> 'Polynomial':
-<<<<<<< HEAD
-        """Add two polynomials."""
-        max_degree = max(self.degree(), other.degree())
-        new_coeffs = [0] * (max_degree + 1)
-        
-        for i in range(len(self.coeffs)):
-            new_coeffs[max_degree - self.degree() + i] += self.coeffs[i]
-        
-        for i in range(len(other.coeffs)):
-            new_coeffs[max_degree - other.degree() + i] += other.coeffs[i]
-        
-        return Polynomial(new_coeffs)
-    
-    def __mul__(self, other: 'Polynomial') -> 'Polynomial':
-        """Multiply two polynomials using convolution."""
-        degree = self.degree() + other.degree()
-        new_coeffs = [0] * (degree + 1)
-        
-        for i, a in enumerate(self.coeffs):
-            for j, b in enumerate(other.coeffs):
-                new_coeffs[i + j] += a * b
-        
-        return Polynomial(new_coeffs)
-    
-    def __sub__(self, other: 'Polynomial') -> 'Polynomial':
-        """Subtract two polynomials."""
-        return self + (other * Polynomial([-1]))
-    
-    def __truediv__(self, other: 'Polynomial') -> Tuple['Polynomial', 'Polynomial']:
-        """Polynomial division returning quotient and remainder."""
-        if other.degree() == 0 and math.isclose(other.coeffs[0], 0, abs_tol=1e-10):
-            raise ZeroDivisionError("Cannot divide by zero polynomial")
-            
-        if self.degree() < other.degree():
-            return Polynomial([0]), self
-        
-        remainder = Polynomial(self.coeffs.copy())
-        divisor = other
-        quotient_coeffs = [0] * (self.degree() - divisor.degree() + 1)
-        
-        while remainder.degree() >= divisor.degree():
-            # Compute the next term of the quotient
-=======
         if _USE_CPP:
             out_len = max(len(self.coeffs), len(other.coeffs))
             out = (ctypes.c_double * out_len)()
@@ -286,49 +220,22 @@ class Polynomial:
         divisor = other
         quotient_coeffs = [0] * (self.degree() - divisor.degree() + 1)
         while remainder.degree() >= divisor.degree():
->>>>>>> ab47c69 (Implemented in C)
             if remainder.is_zero():
                 break
             leading_coeff = remainder.coeffs[0] / divisor.coeffs[0]
             power = remainder.degree() - divisor.degree()
-<<<<<<< HEAD
-            
-            # Create the term polynomial
-            term_coeffs = [0] * (power + 1)
-            term_coeffs[0] = leading_coeff
-            term = Polynomial(term_coeffs)
-            
-            # Update quotient and remainder
-            quotient_coeffs[power] = leading_coeff
-            remainder = remainder - (term * divisor)
-        
-        quotient = Polynomial(quotient_coeffs)
-        
-        # Remove any minuscule coefficients due to floating point errors
-=======
             term_coeffs = [0] * (power + 1)
             term_coeffs[0] = leading_coeff
             term = Polynomial(term_coeffs)
             quotient_coeffs[len(quotient_coeffs) - 1 - power] = leading_coeff
             remainder = remainder - (term * divisor)
         quotient = Polynomial(quotient_coeffs)
->>>>>>> ab47c69 (Implemented in C)
         cleaned_remainder = []
         for coeff in remainder.coeffs:
             if abs(coeff) < 1e-10:
                 cleaned_remainder.append(0.0)
             else:
                 cleaned_remainder.append(coeff)
-<<<<<<< HEAD
-        
-        return quotient, Polynomial(cleaned_remainder)
-    
-    def gcd(self, other: 'Polynomial') -> 'Polynomial':
-        """Compute GCD of two polynomials using Euclidean algorithm."""
-        a = self
-        b = other
-
-=======
         return quotient, Polynomial(cleaned_remainder)
     
     def gcd(self, other: 'Polynomial') -> 'Polynomial':
@@ -343,18 +250,10 @@ class Polynomial:
             return Polynomial(_to_py_list(out_buf, out_len.value))
         a = self
         b = other
->>>>>>> ab47c69 (Implemented in C)
         while not b.is_zero():
             _, remainder = a / b
             a = b
             b = remainder
-<<<<<<< HEAD
-            print(f"a: {a}, b: {b}")
-            print(f"degree a: {a.degree()}, degree b: {b.degree()}")
-
-        # Make the GCD monic
-=======
->>>>>>> ab47c69 (Implemented in C)
         if not a.is_zero():
             leading_coeff = a.coeffs[0]
             monic_coeffs = [c / leading_coeff for c in a.coeffs]
@@ -378,34 +277,19 @@ class Polynomial:
         return sequence
     
     def sign_changes(self, x: float) -> int:
-<<<<<<< HEAD
-        """Count sign changes in the Sturm sequence evaluated at x."""
-        sequence = self.sturm_sequence()
-        values = [poly.evaluate(x) for poly in sequence]
-        
-        # Remove zeros by treating them as positive (but this can be improved)
-=======
         if _USE_CPP:
             arr = _to_c_array(self.coeffs)
             return int(_LIB.poly_sturm_sign_changes(arr, len(self.coeffs), float(x)))
         sequence = self.sturm_sequence()
         values = [poly.evaluate(x) for poly in sequence]
->>>>>>> ab47c69 (Implemented in C)
         cleaned_values = []
         for v in values:
             if math.isclose(v, 0, abs_tol=1e-10):
                 cleaned_values.append(0.0)
             else:
                 cleaned_values.append(v)
-<<<<<<< HEAD
-        
         sign_changes = 0
         prev_sign = 0
-        
-=======
-        sign_changes = 0
-        prev_sign = 0
->>>>>>> ab47c69 (Implemented in C)
         for v in cleaned_values:
             if v > 0:
                 current_sign = 1
@@ -413,22 +297,6 @@ class Polynomial:
                 current_sign = -1
             else:
                 current_sign = 0
-<<<<<<< HEAD
-            
-            if (prev_sign != 0) and (current_sign != 0) and (current_sign != prev_sign):
-                sign_changes += 1
-            
-            if current_sign != 0:
-                prev_sign = current_sign
-        
-        return sign_changes
-    
-    def num_real_roots(self, a: float, b: float) -> int:
-        """Count the number of distinct real roots in interval [a, b] using Sturm's theorem."""
-        if a > b:
-            a, b = b, a
-        
-=======
             if (prev_sign != 0) and (current_sign != 0) and (current_sign != prev_sign):
                 sign_changes += 1
             if current_sign != 0:
@@ -441,7 +309,6 @@ class Polynomial:
         if _USE_CPP:
             arr = _to_c_array(self.coeffs)
             return int(_LIB.poly_num_real_roots_interval(arr, len(self.coeffs), float(a), float(b)))
->>>>>>> ab47c69 (Implemented in C)
         return self.sign_changes(a) - self.sign_changes(b)
     
     def find_real_roots(self, tolerance: float = 1e-6, max_iter: int = 100) -> List[float]:
@@ -449,8 +316,6 @@ class Polynomial:
         if self.degree() == 0:
             return []
         
-<<<<<<< HEAD
-=======
         if _USE_CPP:
             arr = _to_c_array(self.coeffs)
             # Allocate max possible roots (degree of polynomial)
@@ -478,7 +343,6 @@ class Polynomial:
                 # If numpy unavailable, fall through to Python Sturm-based search below
                 pass
 
->>>>>>> ab47c69 (Implemented in C)
         # Find a bound for the roots
         max_coeff = max(abs(c) for c in self.coeffs[1:])
         bound = 1 + max_coeff / abs(self.coeffs[0])
@@ -503,11 +367,7 @@ class Polynomial:
         intervals = []
         find_root_intervals(self, search_interval[0], search_interval[1], intervals)
         
-<<<<<<< HEAD
-        # Refine roots using binary search
-=======
         # Refine roots using Sturm-guided bisection
->>>>>>> ab47c69 (Implemented in C)
         roots = []
         for a, b in intervals:
             if math.isclose(self.evaluate(a), 0, abs_tol=tolerance):
@@ -524,20 +384,11 @@ class Polynomial:
             for _ in range(max_iter):
                 mid = (left + right) / 2
                 val = self.evaluate(mid)
-<<<<<<< HEAD
-                
-                if math.isclose(val, 0, abs_tol=tolerance):
-                    roots.append(mid)
-                    break
-                
-                if self.evaluate(left) * val < 0:
-=======
                 if math.isclose(val, 0, abs_tol=tolerance):
                     roots.append(mid)
                     break
                 num_left = self.num_real_roots(left, mid)
                 if num_left > 0:
->>>>>>> ab47c69 (Implemented in C)
                     right = mid
                 else:
                     left = mid
@@ -545,19 +396,11 @@ class Polynomial:
                 roots.append(mid)
         
         # Remove duplicates (roots that are very close)
-<<<<<<< HEAD
-        unique_roots = []
-        for root in sorted(roots):
-            if not unique_roots or abs(root - unique_roots[-1]) > tolerance:
-                unique_roots.append(root)
-        
-=======
         roots.sort()
         unique_roots = []
         for r in roots:
             if not unique_roots or abs(r - unique_roots[-1]) > tolerance:
                 unique_roots.append(r)
->>>>>>> ab47c69 (Implemented in C)
         return unique_roots
     
     def is_zero(self) -> bool:
@@ -570,8 +413,6 @@ class Polynomial:
             A tuple (gcd, s, t) where gcd is the GCD of self and other,
             and s, t are the coefficients in Bezout's identity.
         """
-<<<<<<< HEAD
-=======
         if _USE_CPP:
             a = _to_c_array(self.coeffs)
             b = _to_c_array(other.coeffs)
@@ -603,7 +444,6 @@ class Polynomial:
                     Polynomial(_to_py_list(s_buf, len_s.value)),
                     Polynomial(_to_py_list(t_buf, len_t.value)))
 
->>>>>>> ab47c69 (Implemented in C)
         old_r, r = self, other
         old_s, s = Polynomial([1]), Polynomial([0])
         old_t, t = Polynomial([0]), Polynomial([1])
@@ -682,8 +522,4 @@ if __name__ == "__main__":
     print("\nRoots of p3:")
     roots3 = p3.find_real_roots()
     for root in roots3:
-<<<<<<< HEAD
         print(f"Root: {root:.6f}, p3(root) = {p3.evaluate(root):.2e}")
-=======
-        print(f"Root: {root:.6f}, p3(root) = {p3.evaluate(root):.2e}")
->>>>>>> ab47c69 (Implemented in C)
