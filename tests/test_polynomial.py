@@ -48,8 +48,8 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual(left.coeffs, gcd.coeffs)
         roots = p1.find_real_roots()
         self.assertTrue(len(roots) == 2)
-        self.assertTrue(any(abs(r - 1.0) < 1e-6 for r in roots))
-        self.assertTrue(any(abs(r - 2.0) < 1e-6 for r in roots))
+        self.assertTrue(any(abs(r - 1.0) < 1e-9 for r in roots))
+        self.assertTrue(any(abs(r - 2.0) < 1e-9 for r in roots))
 
     def test_fft_threshold_config(self):
         from src.polynomial import set_fft_threshold

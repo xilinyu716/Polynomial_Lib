@@ -28,8 +28,8 @@ class TestPolyLibPackage(unittest.TestCase):
         left = s * p1 + t * p2
         self.assertEqual(left.coeffs, gcd.coeffs)
         roots = p1.find_real_roots()
-        self.assertTrue(any(abs(r - 1.0) < 1e-6 for r in roots))
-        self.assertTrue(any(abs(r - 2.0) < 1e-6 for r in roots))
+        self.assertTrue(any(abs(r - 1.0) < 1e-9 for r in roots))
+        self.assertTrue(any(abs(r - 2.0) < 1e-9 for r in roots))
 
     def test_fft_threshold_config(self):
         p1 = Polynomial([1] + [0]*200)

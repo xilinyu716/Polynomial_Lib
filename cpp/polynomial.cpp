@@ -214,7 +214,7 @@ int poly_find_real_roots(const double* a, int len_a, double* roots) {
     find_intervals(seq, -bound, bound, intervals);
     
     auto push_unique = [&](std::vector<double>& vec, double r){
-        for(double v : vec){ if(std::fabs(v - r) < 1e-6) return; }
+        for(double v : vec){ if(std::fabs(v - r) < 1e-9) return; }
         vec.push_back(r);
     };
     std::vector<double> out_roots;
@@ -242,7 +242,7 @@ int poly_find_real_roots(const double* a, int len_a, double* roots) {
     std::sort(out_roots.begin(), out_roots.end());
     // Final dedup (safety)
     std::vector<double> uniq;
-    for(double r : out_roots){ if(uniq.empty() || std::fabs(uniq.back()-r) > 1e-6) uniq.push_back(r); }
+    for(double r : out_roots){ if(uniq.empty() || std::fabs(uniq.back()-r) > 1e-9) uniq.push_back(r); }
     for(size_t i=0;i<uniq.size();++i) roots[i] = uniq[i];
     return (int)uniq.size();
 }

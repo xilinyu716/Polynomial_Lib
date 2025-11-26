@@ -268,7 +268,7 @@ class Polynomial:
             arr = _to_c_array(self.coeffs)
             return int(_LIB.poly_num_real_roots_interval(arr, len(self.coeffs), float(a), float(b)))
         return self.sign_changes(a) - self.sign_changes(b)
-    def find_real_roots(self, tolerance: float = 1e-6, max_iter: int = 100) -> List[float]:
+    def find_real_roots(self, tolerance: float = 1e-9, max_iter: int = 100) -> List[float]:
         if self.degree() == 0:
             return []
         # Prefer numerical root extraction first for robustness

@@ -311,7 +311,7 @@ class Polynomial:
             return int(_LIB.poly_num_real_roots_interval(arr, len(self.coeffs), float(a), float(b)))
         return self.sign_changes(a) - self.sign_changes(b)
     
-    def find_real_roots(self, tolerance: float = 1e-6, max_iter: int = 100) -> List[float]:
+    def find_real_roots(self, tolerance: float = 1e-9, max_iter: int = 100) -> List[float]:
         """Find all real roots of the polynomial using Sturm sequence and binary search."""
         if self.degree() == 0:
             return []
